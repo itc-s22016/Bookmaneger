@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.s22016.bookmaneger
+package jp.ac.it_college.std.s22016.bookmanager
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

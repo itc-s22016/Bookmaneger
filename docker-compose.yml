@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  #PostgreSQL
+  db:
+    image: postgres:15.3-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: kotlin
+    volumes:
+      - pg_data:/varlib/postgresql/data
+
+volumes:
+  pg_data:

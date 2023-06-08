@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/book_manager
+    username: manager
+    password: kotlin
+    driver-class-name: org.postgresql.Driver
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+

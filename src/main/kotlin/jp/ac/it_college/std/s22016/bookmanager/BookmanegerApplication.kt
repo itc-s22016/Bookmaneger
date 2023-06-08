@@ -1,4 +1,4 @@
-package jp.ac.it_college.std.s22016.bookmaneger
+package jp.ac.it_college.std.s22016.bookmanager
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
