@@ -10,10 +10,7 @@ import jp.ac.it_college.std.s22016.bookmanager.infrastructure.database.mapper.Re
 import jp.ac.it_college.std.s22016.bookmanager.infrastructure.database.mapper.RentalDynamicSqlSupport.returnDeadline
 import jp.ac.it_college.std.s22016.bookmanager.infrastructure.database.mapper.RentalDynamicSqlSupport.userId
 import jp.ac.it_college.std.s22016.bookmanager.infrastructure.database.record.BookWithRental
-import org.apache.ibatis.annotations.Mapper
-import org.apache.ibatis.annotations.Result
-import org.apache.ibatis.annotations.Results
-import org.apache.ibatis.annotations.SelectProvider
+import org.apache.ibatis.annotations.*
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
@@ -24,7 +21,7 @@ import org.mybatis.dynamic.sql.util.kotlin.mybatis3.select
 @Mapper
 interface BookWithRentalMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
-    @Results(id = "BookWithRentalRecoedResult", value = [
+    @Results(id = "BookWithRentalResult  ", value = [
         Result (column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
         Result (column = "id", property = "title", jdbcType = JdbcType.VARCHAR),
         Result (column = "author", property = "author", jdbcType = JdbcType.VARCHAR),
@@ -35,15 +32,31 @@ interface BookWithRentalMapper {
         ]
     )
     fun selectMany(selectStatement: SelectStatementProvider): List<BookWithRental>
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    @ResultMap("BookWithRentalResult")
+    fun selectOne(selectStatement: SelectStatementProvider): BookWithRental?
 }
 
 private val columnList = listOf(id, title, author, releaseDate, userId, rentalDatetime, returnDeadline)
 
 fun BookWithRentalMapper.select(completer: SelectCompleter) =
     select(columnList) {
+        from(book,"b")
+        leftJoin(rental,"r") {
+            on(book.id) equalTo rental.bookId
+        }
+        run(completer)
+    }.run(this::selectMany)
+
+fun BookWithRentalMapper.selectByPrimaryKey(id_:Long) =
+    select(columnList) {
         from(book, "b")
         leftJoin(rental,"r") {
             on(book.id) equalTo rental.bookId
         }
-        completer()
-    }.run(this::selectMany)
+        where{
+            id isEqualTo id_
+        }
+    }.run(this::selectOne)
+
